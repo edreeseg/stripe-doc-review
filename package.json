@@ -1,0 +1,14 @@
+{
+  "name": "stripe-doc-review",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/edreeseg/stripe-doc-review.git",
+  "author": "edreeseg <edward.reeseg@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"yarn start --prefix front-end\" \"yarn server --prefix back-end\""
+  }
+}
