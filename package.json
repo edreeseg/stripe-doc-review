@@ -9,6 +9,6 @@
     "concurrently": "^4.1.0"
   },
   "scripts": {
-    "dev": "concurrently \"yarn start --prefix front-end\" \"yarn server --prefix back-end\""
+    "dev": "concurrently \"yarn --cwd front-end start\" \"yarn --cwd back-end server\""
   }
 }
