@@ -1,10 +1,10 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY_TEST);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_TEST);
 
 const createProduct = async () => {
   try {
     const product = await stripe.products.create({
-      name: "Contractor Scheduler",
-      type: "service"
+      name: 'Contractor Scheduler',
+      type: 'service',
     });
     return product;
   } catch (err) {
@@ -16,9 +16,9 @@ const createPlan = async product => {
   try {
     const plan = await stripe.plans.create({
       product,
-      currency: "usd",
-      interval: "month",
-      amount: "1000"
+      currency: 'usd',
+      interval: 'month',
+      amount: '1000',
     });
     return plan;
   } catch (err) {
@@ -27,14 +27,14 @@ const createPlan = async product => {
 };
 
 const ownerInfo = {
-  name: "Edward Reeseg",
+  name: 'Edward Reeseg',
   address: {
-    line1: "803 Bryant St.",
-    city: "Rahway",
-    postal_code: "07065",
-    country: "US"
+    line1: '803 Bryant St.',
+    city: 'Rahway',
+    postal_code: '07065',
+    country: 'US',
   },
-  email: "edward.reeseg@gmail.com"
+  email: 'edward.reeseg@gmail.com',
 };
 
 const createCustomer = async info => {
@@ -46,11 +46,11 @@ const createCustomer = async info => {
   }
 };
 
-const createSubscription = async (customer, plan = "plan_FFqp2OIxO2sfEd") => {
+const createSubscription = async (customer, plan = 'plan_FFqp2OIxO2sfEd') => {
   try {
     const subscription = await stripe.subscriptions.create({
       customer,
-      items: [{ plan }]
+      items: [{ plan }],
     });
     return subscription;
   } catch (err) {
@@ -61,9 +61,9 @@ const createSubscription = async (customer, plan = "plan_FFqp2OIxO2sfEd") => {
 const createSource = async (token, owner) => {
   try {
     const source = await stripe.sources.create({
-      type: "card",
+      type: 'card',
       token,
-      owner
+      owner,
     });
     return source;
   } catch (error) {
@@ -74,16 +74,16 @@ const createSource = async (token, owner) => {
 const createPaymentIntent = async customer => {
   const instance = await stripe.paymentIntents.create({
     amount: 1000,
-    currency: "usd",
-    customer
+    currency: 'usd',
+    customer,
   });
   return instance;
 };
 
 const createPaymentMethod = async card => {
   const method = stripe.paymentMethods.create({
-    type: "card",
-    card // number, exp_month, exp_year, cvc keys
+    type: 'card',
+    card, // number, exp_month, exp_year, cvc keys
   });
   return method;
 };
@@ -92,10 +92,21 @@ const createCharge = async token => {
   try {
     const charge = await stripe.charges.create({
       amount: 1000,
-      currency: "usd",
-      source: token
+      currency: 'usd',
+      source: token,
     });
     return charge;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addSourceToCustomer = async (customer, source) => {
+  try {
+    const added = await stripe.customers.createSource(customer, {
+      source,
+    });
+    return added;
   } catch (err) {
     console.log(err);
   }
@@ -109,6 +120,7 @@ module.exports = {
   createSource,
   createPaymentIntent,
   createPaymentMethod,
+  addSourceToCustomer,
   createCharge,
-  ownerInfo
+  ownerInfo,
 };
