@@ -58,6 +58,15 @@ const createSubscription = async (customer, plan = 'plan_FFqp2OIxO2sfEd') => {
   }
 };
 
+const cancelSubscription = async customer => {
+  try {
+    const cancelled = await stripe.subscriptions.del(customer);
+    return cancelled;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const createSource = async (token, owner) => {
   try {
     const source = await stripe.sources.create({
@@ -117,6 +126,7 @@ module.exports = {
   createPlan,
   createProduct,
   createSubscription,
+  cancelSubscription,
   createSource,
   createPaymentIntent,
   createPaymentMethod,

@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-app.post('/charge', async (req, res) => {
+app.post('/subscribe', async (req, res) => {
   try {
     const { token, address } = req.body;
     const owner = {
@@ -21,20 +21,26 @@ app.post('/charge', async (req, res) => {
       },
       email: token.email,
     };
-    const testProduct = await stripe.createProduct();
-    const testPlan = await stripe.createPlan(testProduct.id);
     const customer = await stripe.createCustomer(owner);
     const source = await stripe.createSource(token.id, owner);
     const added = await stripe.addSourceToCustomer(customer.id, source.id);
     const subscription = await stripe.createSubscription(
       customer.id,
-      testPlan.id
-    );
-    console.log(subscription);
-    res.send('test');
+      process.env.STRIPE_PLAN_ID_TEST
+    ); // Grab subscriptions ID and save it to the users table
+    res.status(201).json({ subscription });
   } catch (error) {
-    console.log(error);
-    res.send('error');
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete('/subscribe/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const cancelled = await stripe.cancelSubscription(id);
+    res.json({ cancelled });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
