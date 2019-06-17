@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { injectStripe } from 'react-stripe-elements';
-import StripeCheckout from 'react-stripe-checkout';
+import React, { useState } from "react";
+import axios from "axios";
+import { injectStripe } from "react-stripe-elements";
+import StripeCheckout from "react-stripe-checkout";
 
 function CheckoutForm(props) {
-  const [streetAddress, setStreetAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [stateAbbr, setStateAbbr] = useState('');
-  const [zip, setZip] = useState('');
-  const [cardNum, setCardNum] = useState('');
-  const [exp, setExp] = useState('');
-  const [cvv, setCvv] = useState('');
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [stateAbbr, setStateAbbr] = useState("");
+  const [zip, setZip] = useState("");
+  const [cardNum, setCardNum] = useState("");
+  const [exp, setExp] = useState("");
+  const [cvv, setCvv] = useState("");
   const handleSubmit = async ev => {
     ev.preventDefault();
     try {
-      const method = await this.props.stripe.createPaymentMethod('card', {
-        billing_details: { name: 'Edward Reeseg' },
+      const method = await this.props.stripe.createPaymentMethod("card", {
+        billing_details: { name: "Edward Reeseg" }
       });
     } catch (err) {
       console.log(err);
@@ -23,9 +23,9 @@ function CheckoutForm(props) {
   };
   const onToken = async (token, address) => {
     console.log(address);
-    const response = await axios.post('http://localhost:5000/charge', {
+    const response = await axios.post("http://localhost:5000/subscribe", {
       token,
-      address,
+      address
     });
     console.log(response.data);
   };
@@ -36,6 +36,9 @@ function CheckoutForm(props) {
       currency="USD"
       billingAddress={true}
       zipCode={true}
+      amount={1000}
+      name="Contractor Scheduler"
+      description="Simple scheduling of clients."
     />
     // <form onSubmit={handleSubmit}>
     //   <AddressSection
